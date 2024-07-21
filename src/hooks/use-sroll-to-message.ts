@@ -3,12 +3,15 @@ import { IMessage } from "../types/interfaces";
 
 export const useScrollToMessage = (messages: IMessage[]): MutableRefObject<HTMLDivElement | null> => {
   const messageEndRef = useRef<HTMLDivElement | null>(null);
+  const prevMessagesCount = useRef<number>(messages.length);
 
-  const scrollToMessage = () => {
-    messageEndRef.current?.scrollIntoView();
-  };
+  useEffect(() => {
+    if (messages.length > prevMessagesCount.current) {
+      messageEndRef.current?.scrollIntoView();
+    }
 
-  useEffect(() => scrollToMessage(), [messages]);
+    prevMessagesCount.current = messages.length;
+  }, [messages]);
 
   return messageEndRef;
 };
